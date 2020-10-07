@@ -1,0 +1,132 @@
+strdef tstr0, tstr1,tstr2,tstr3
+strdef MainBoxTitle
+MainBoxTitle = ""
+SubVBoxNum = 3
+SubDeckNum = 2
+objref MainHBoxObj,SubVBoxObj[SubVBoxNum]
+objref SubDeckObj[SubDeckNum]
+
+
+
+proc Plot1V() {
+	sprint(tstr1,"%s.soma.v(.5)",$s1)
+	newPlot(0,tstop,-80,60)
+	graphItem.save_name("graphList[0].")
+	graphList[0].append(graphItem)
+	graphItem.addexpr(tstr1,3,1)
+	
+	sprint(tstr1,"%s.soma.v",$s1)
+	sprint(tstr2,"tstr3 = units(&%s)",tstr1)
+	execute(tstr2)
+	sprint(tstr1, "%s Voltage (%s)",$s1, tstr3)
+	graphItem.label(.08,.925,tstr1)
+}
+
+proc PlotINaKRTM() { 
+	sprint(tstr0,"%s.soma.ileak_leak(.5)",$s1)
+	sprint(tstr1,"%s.soma.ina_na_rtm(.5)",$s1)
+	sprint(tstr2,"%s.soma.ik_k_rtm(.5)",$s1)
+	newPlot(0,tstop,-2,2)
+	graphItem.save_name("graphList[2].")
+	graphList[2].append(graphItem)
+	graphItem.addexpr(tstr0,1,1)
+	graphItem.addexpr(tstr1,3,1)
+	graphItem.addexpr(tstr2,2,1)
+	
+	sprint(tstr1,"%s.soma.ina_na_rtm",$s1)
+	sprint(tstr2,"tstr3 = units(&%s)",tstr1)
+	execute(tstr2)
+	sprint(tstr1, "%s Current (%s)", $s1, tstr3)
+	graphItem.label(.08,.925,tstr1)
+}
+
+
+proc PlotINaKWB() { 
+	sprint(tstr0,"%s.soma.ileak_leak(.5)",$s1)
+	sprint(tstr1,"%s.soma.ina_na_wb(.5)",$s1)
+	sprint(tstr2,"%s.soma.ik_k_wb(.5)",$s1)
+	newPlot(0,tstop,-2,2)
+	graphItem.save_name("graphList[2].")
+	graphList[2].append(graphItem)
+	graphItem.addexpr(tstr0,1,1)
+	graphItem.addexpr(tstr1,3,1)
+	graphItem.addexpr(tstr2,2,1)
+	
+	sprint(tstr1,"%s.soma.ina_na_wb",$s1)
+	sprint(tstr2,"tstr3 = units(&%s)",tstr1)
+	execute(tstr2)
+	sprint(tstr1, "%s Current (%s)", $s1, tstr3)
+	graphItem.label(.08,.925,tstr1)
+}
+
+//MainHBoxObj ->SubVBoxObj ->SubDeckObj
+proc allInOneBoxRTM() { local i
+	MainBoxTitle = "RTM Cell Tester"
+	MainHBoxObj = new HBox()
+	for i=0,SubVBoxNum-1 SubVBoxObj[i] = new VBox()
+	for i=0,SubDeckNum-1 SubDeckObj[i] = new Deck()
+	
+	SubDeckObj[0].intercept(1)
+		xpanel(" ")
+			xlabel("----PLOTS IN THE LEFT PANEL----")
+		xpanel(0)
+	SubDeckObj[0].intercept(0)
+	SubDeckObj[1].intercept(1)
+		
+	SubDeckObj[1].intercept(0)
+	//////// SubVBoxes ////////
+	SubVBoxObj[0].intercept(1)
+		Plot1V($s1)
+		PlotINaKRTM($s1)
+	SubVBoxObj[0].intercept(0)
+	
+	SubVBoxObj[1].intercept(1)
+		$o2.soma nrnsecmenu(.5,1)
+	SubVBoxObj[1].intercept(0)
+	
+	SubVBoxObj[2].intercept(1)
+		nrncontrolmenu()
+		nrnpointmenu($o3)
+	SubVBoxObj[2].intercept(0)
+	
+	MainHBoxObj.intercept(1)
+		for i=0,SubVBoxNum-1 SubVBoxObj[i].map()
+	MainHBoxObj.intercept(0)
+	MainHBoxObj.map(MainBoxTitle,0,0,1000,600)
+}
+
+//MainHBoxObj ->SubVBoxObj ->SubDeckObj
+proc allInOneBoxWB() { local i
+	MainBoxTitle = "WB Cell Tester"
+	MainHBoxObj = new HBox()
+	for i=0,SubVBoxNum-1 SubVBoxObj[i] = new VBox()
+	for i=0,SubDeckNum-1 SubDeckObj[i] = new Deck()
+	
+	SubDeckObj[0].intercept(1)
+		xpanel(" ")
+			xlabel("----PLOTS IN THE LEFT PANEL----")
+		xpanel(0)
+	SubDeckObj[0].intercept(0)
+	SubDeckObj[1].intercept(1)
+		
+	SubDeckObj[1].intercept(0)
+	//////// SubVBoxes ////////
+	SubVBoxObj[0].intercept(1)
+		Plot1V($s1)
+		PlotINaKWB($s1)
+	SubVBoxObj[0].intercept(0)
+	
+	SubVBoxObj[1].intercept(1)
+		$o2.soma nrnsecmenu(.5,1)
+	SubVBoxObj[1].intercept(0)
+	
+	SubVBoxObj[2].intercept(1)
+		nrncontrolmenu()
+		nrnpointmenu($o3)
+	SubVBoxObj[2].intercept(0)
+	
+	MainHBoxObj.intercept(1)
+		for i=0,SubVBoxNum-1 SubVBoxObj[i].map()
+	MainHBoxObj.intercept(0)
+	MainHBoxObj.map(MainBoxTitle,0,0,1000,600)
+}
