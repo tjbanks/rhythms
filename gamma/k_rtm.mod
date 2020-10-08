@@ -63,6 +63,8 @@ function n_e_inf=n_e_inf(v)
 alpha_n=0.032*(v+52)./(1-exp(-(v+52)/5));
 beta_n=0.5*exp(-(v+57)/40);
 n_e_inf=alpha_n./(alpha_n+beta_n);
+:inf = 0.032*(v+52)/(1-exp(-(v+52)/5))/(0.032*(v+52)/(1-exp(-(v+52)/5))+0.5*exp(-(v+57)/40))
+:tau = 1/(0.032*(v+52)/(1-exp(-(v+52)/5))+0.5*exp(-(v+57)/40))
 
 Regression fit INF
 ninf = 1.0/(1.0+(exp((v+40.8)/(-11.03))))
@@ -74,7 +76,9 @@ ENDCOMMENT
 
 PROCEDURE rate(v (mV)) {
 	UNITSOFF
-	inf = 1.0/(1.0+(exp((v+ninfvhalf)/(ninfk))))       
+	inf = 1.0/(1.0+(exp((v+ninfvhalf)/(ninfk))))   
+	:inf = 0.032*(v+52)/(1-exp(-(v+52)/5))/(0.032*(v+52)/(1-exp(-(v+52)/5))+0.5*exp(-(v+57)/40))    
 	tau = (1 - exp(-v/5 - 52/5))/(0.032*v + 0.5*(1 - exp(-v/5 - 52/5))*exp(-v/40 - 57/40) + 1.664)
+	:tau = 1/(0.032*(v+52)/(1-exp(-(v+52)/5))+0.5*exp(-(v+57)/40))
 	UNITSON
 }

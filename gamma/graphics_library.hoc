@@ -1,11 +1,15 @@
 strdef tstr0, tstr1,tstr2,tstr3
-strdef MainBoxTitle
+strdef MainBoxTitle, ControlMainBoxTitle
 MainBoxTitle = ""
 SubVBoxNum = 3
 SubDeckNum = 2
 objref MainHBoxObj,SubVBoxObj[SubVBoxNum]
 objref SubDeckObj[SubDeckNum]
 
+ControlSubVBoxNum = 3
+ControlSubDeckNum = 2
+objref ControlMainHBoxObj,ControlSubVBoxObj[ControlSubVBoxNum]
+objref Control[ControlSubDeckNum]
 
 
 proc Plot1V() {
@@ -20,6 +24,17 @@ proc Plot1V() {
 	execute(tstr2)
 	sprint(tstr1, "%s Voltage (%s)",$s1, tstr3)
 	graphItem.label(.08,.925,tstr1)
+}
+
+proc Plot2V() {
+	sprint(tstr1,"%s.soma.v(.5)",$s1)
+	sprint(tstr2,"%s.soma.v(.5)",$s2)
+	newPlot(0,tstop,-80,60)
+	graphItem.save_name("graphList[0].")
+	graphList[0].append(graphItem)
+	graphItem.addexpr(tstr1,3,1)
+	graphItem.addexpr(tstr2,2,1)
+	
 }
 
 proc PlotINaKRTM() { 
@@ -40,6 +55,19 @@ proc PlotINaKRTM() {
 	graphItem.label(.08,.925,tstr1)
 }
 
+proc PlotISyn() { 
+	sprint(tstr0,"%s.i",$s1)
+	newPlot(0,tstop,-2,2)
+	graphItem.save_name("graphList[2].")
+	graphList[2].append(graphItem)
+	graphItem.addexpr(tstr0,1,1)
+	
+	sprint(tstr1,"%s.i",$s1)
+	sprint(tstr2,"tstr3 = units(&%s)",tstr1)
+	execute(tstr2)
+	sprint(tstr1, "%s Current (%s)", $s1, tstr3)
+	graphItem.label(.08,.925,tstr1)
+}
 
 proc PlotINaKWB() { 
 	sprint(tstr0,"%s.soma.ileak_leak(.5)",$s1)
@@ -92,7 +120,7 @@ proc allInOneBoxRTM() { local i
 	MainHBoxObj.intercept(1)
 		for i=0,SubVBoxNum-1 SubVBoxObj[i].map()
 	MainHBoxObj.intercept(0)
-	MainHBoxObj.map(MainBoxTitle,0,0,1000,600)
+	MainHBoxObj.map(MainBoxTitle,0,0,1000,400)
 }
 
 //MainHBoxObj ->SubVBoxObj ->SubDeckObj
@@ -128,5 +156,76 @@ proc allInOneBoxWB() { local i
 	MainHBoxObj.intercept(1)
 		for i=0,SubVBoxNum-1 SubVBoxObj[i].map()
 	MainHBoxObj.intercept(0)
-	MainHBoxObj.map(MainBoxTitle,0,0,1000,600)
+	MainHBoxObj.map(MainBoxTitle,0,0,1000,400)
+}
+
+
+//allInOneBoxHCO("CellA", CellA, ccl, syn[0],"CellB", CellB, syn[1])
+//               $s1,     $o2,    $o3, $o4,  $s5,    $o6,   $o7
+
+proc allInOneBox() { local i
+
+	MainBoxTitle = "Two-cell Gamma Rhythms"
+	MainHBoxObj = new HBox()
+	for i=0,SubVBoxNum-1 SubVBoxObj[i] = new VBox()
+	for i=0,SubDeckNum-1 SubDeckObj[i] = new Deck()
+	
+	ControlMainBoxTitle = "Two-cell Gamma Rhythms"
+	ControlMainHBoxObj = new HBox()
+	for i=0,ControlSubVBoxNum-1 ControlSubVBoxObj[i] = new VBox()
+	
+	
+	//Controls
+	//Left Side
+	ControlSubVBoxObj[0].intercept(1)
+		$o2.soma nrnsecmenu(.5,1)
+	ControlSubVBoxObj[0].intercept(0)
+	
+	//Middle	
+	ControlSubVBoxObj[1].intercept(1)
+		nrnpointmenu($o3)
+		nrnpointmenu($o4)
+		nrnpointmenu($o7)
+	ControlSubVBoxObj[1].intercept(0)
+	
+	//Right Side
+	ControlSubVBoxObj[2].intercept(1)
+		$o6.soma nrnsecmenu(.5,1)
+	ControlSubVBoxObj[2].intercept(0)
+	
+	ControlMainHBoxObj.intercept(1)
+		for i=0,ControlSubVBoxNum-1 ControlSubVBoxObj[i].map()
+	ControlMainHBoxObj.intercept(0)
+	ControlMainHBoxObj.map(ControlMainBoxTitle,0,0,900,500)
+	
+	
+	//Main Graphs Panel
+	
+	//////// SubVBoxes ////////
+	//Left Side
+	SubVBoxObj[0].intercept(1)
+		Plot1V($s1)
+		PlotINaKRTM($s1)
+		PlotISyn($s9)
+		//SubDeckObj[0].map()
+		//SubDeckObj[0].flip_to(0)
+	SubVBoxObj[0].intercept(0)
+	
+	//Middle
+	SubVBoxObj[1].intercept(1)
+		Plot2V($s1,$s5)
+		nrncontrolmenu()		
+	SubVBoxObj[1].intercept(0)
+	
+	//Right side
+	SubVBoxObj[2].intercept(1)
+		Plot1V($s5)
+		PlotINaKWB($s5)
+		PlotISyn($s8)
+	SubVBoxObj[2].intercept(0)
+	
+	MainHBoxObj.intercept(1)
+		for i=0,SubVBoxNum-1 SubVBoxObj[i].map()
+	MainHBoxObj.intercept(0)
+	MainHBoxObj.map(MainBoxTitle,0,0,900,500)	
 }

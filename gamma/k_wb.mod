@@ -14,7 +14,7 @@ NEURON {
 	RANGE gbar, g
 	RANGE inf, tau
 	RANGE ik
-    RANGE ninfvhalf,ninfk
+    RANGE ninfvhalf,ninfk,tauphi
 }
 
 UNITS {
@@ -26,7 +26,7 @@ PARAMETER {
 	gbar (siemens/cm2)
     ninfvhalf = 30.03
     ninfk = -17.37
-
+	tauphi = 5
 }
 
 ASSIGNED {
@@ -64,6 +64,8 @@ function n_i_inf=n_i_inf(v)
 alpha_n=-0.01*(v+34)./(exp(-0.1*(v+34))-1);
 beta_n=0.125*exp(-(v+44)/80);
 n_i_inf=alpha_n./(alpha_n+beta_n);
+:inf = -0.01*(v+34)/(exp(-0.1*(v+34))-1)/(-0.01*(v+34)/(exp(-0.1*(v+34))-1)+0.125*exp(-(v+44)/80))
+:tau = 1/(-0.01*(v+34)/(exp(-0.1*(v+34))-1)+0.125*exp(-(v+44)/80))
 
 Regression fit INF
 ninf = 1.0/(1.0+(exp((v+30.03)/(-17.37))))
@@ -77,5 +79,8 @@ PROCEDURE rate(v (mV)) {
 	UNITSOFF
 	inf = 1.0/(1.0+(exp((v+ninfvhalf)/(ninfk))))     
 	tau = (exp(0.1*v) - 0.03337)/((0.01*v + 0.34)*exp(0.1*v) + 0.125*(exp(0.1*v) - 0.03337)*exp(-v/80 - 11/20))
+	:inf = -0.01*(v+34)/(exp(-0.1*(v+34))-1)/(-0.01*(v+34)/(exp(-0.1*(v+34))-1)+0.125*exp(-(v+44)/80))
+	:tau = 1/(-0.01*(v+34)/(exp(-0.1*(v+34))-1)+0.125*exp(-(v+44)/80))
+	tau = tau/tauphi
 	UNITSON
 }

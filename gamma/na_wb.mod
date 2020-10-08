@@ -14,6 +14,8 @@ NEURON {
 	RANGE gbar, g
 	RANGE minf, hinf, mtau, htau
 	RANGE ina
+	RANGE minfvhalf,minfk,hinfvhalf,hinfk
+	RANGE htauphi
 }
 
 UNITS {
@@ -23,6 +25,11 @@ UNITS {
 
 PARAMETER {
 	gbar (siemens/cm2)
+	minfvhalf = 34.57
+    minfk = -9.25 :-9.55
+    hinfvhalf = 55.16
+    hinfk = 7.07
+	htauphi = 5
 }
 
 ASSIGNED {
@@ -65,11 +72,15 @@ function m_i_inf=m_i_inf(v)
 alpha_m=0.1*(v+35)./(1-exp(-(v+35)/10));
 beta_m=4*exp(-(v+60)/18);
 m_i_inf=alpha_m./(alpha_m+beta_m);
+:minf = 0.1*(v+35)/(1-exp(-(v+35)/10))/(0.1*(v+35)/(1-exp(-(v+35)/10))+4*exp(-(v+60)/18))
+:mtau = 1/(0.1*(v+35)/(1-exp(-(v+35)/10))+4*exp(-(v+60)/18))
 
 function h_i_inf=h_i_inf(v)
 alpha_h=0.07*exp(-(v+58)/20);
 beta_h=1./(exp(-0.1*(v+28))+1);
 h_i_inf=alpha_h./(alpha_h+beta_h);
+:hinf = 0.07*exp(-(v+58)/20)/(0.07*exp(-(v+58)/20)+1/(exp(-0.1*(v+28))+1))
+:htau = 1/(0.07*exp(-(v+58)/20)+1/(exp(-0.1*(v+28))+1))
 
 Regression fit INF
 minf = 1.0/(1.0+(exp((v+34.57)/(-9.55))))
@@ -83,9 +94,16 @@ ENDCOMMENT
 
 PROCEDURE rate(v (mV)) {
 	UNITSOFF
-	minf = 1.0/(1.0+(exp((v+34.57)/(-9.55))))
+	minf = 1.0/(1.0+(exp((v+minfvhalf)/(minfk))))
 	mtau = (1 - exp(-v/10 - 7/2))/(0.1*v + 4*(1 - exp(-v/10 - 7/2))*exp(-v/18 - 10/3) + 3.5)   
-	hinf = 1.0/(1.0+(exp((v+55.16)/(7.07)))) 
+	:minf = 0.1*(v+35)/(1-exp(-(v+35)/10))/(0.1*(v+35)/(1-exp(-(v+35)/10))+4*exp(-(v+60)/18))
+	:mtau = 1/(0.1*(v+35)/(1-exp(-(v+35)/10))+4*exp(-(v+60)/18))
+
+	hinf = 1.0/(1.0+(exp((v+hinfvhalf)/(hinfk))))
 	htau = (exp(0.1*v) + 0.0608)/(0.07*(exp(0.1*v) + 0.0608)*exp(-v/20 - 29/10) + exp(0.1*v))
+	:hinf = 0.07*exp(-(v+58)/20)/(0.07*exp(-(v+58)/20)+1/(exp(-0.1*(v+28))+1))
+	:htau = 1/(0.07*exp(-(v+58)/20)+1/(exp(-0.1*(v+28))+1))
+
+	htau = htau/htauphi
 	UNITSON
 }
