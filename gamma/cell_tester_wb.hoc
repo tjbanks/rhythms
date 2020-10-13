@@ -1,3 +1,7 @@
+//Loading mechanisms in other folder
+nrn_load_dll("./modfiles/x86_64/.libs/libnrnmech.so")
+nrn_load_dll("./modfiles/nrnmech.dll")
+
 {load_file("nrngui.hoc")}
 {load_file("cell_templates.hoc")}
 {load_file("graphics_library.hoc")}
