@@ -1,0 +1,4 @@
+edge_type_id target_query source_query dynamics_params syn_weight target_sections model_template
+100 pop_name=='Inh' pop_name=='Exc' PING_ExcToInh.json 0.00125 ['soma'] exp2syn
+101 pop_name=='Exc' pop_name=='Inh' PING_InhToExc.json 0.005 ['soma'] exp2syn
+102 pop_name=='Inh' pop_name=='Inh' PING_InhToInh.json 0.005 ['soma'] exp2syn
