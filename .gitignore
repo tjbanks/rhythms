@@ -134,6 +134,9 @@ dmypy.json
 *.o
 *.c
 x86_64/
+core.*
+
+output/
 
 # h5py (some of these files get large and change often)
 *.h5
