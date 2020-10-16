@@ -22,16 +22,17 @@
     }
   },
   "inputs": {
-    "rtm_spikes": {
+    "noise": {
       "input_type": "spikes",
-      "module": "h5",
-      "input_file": "$BASE_DIR/input/ext_inp_poisson.h5",
+      "module": "sonata",
+      "input_file": "input/ext_inp_poisson.h5",
       "node_set": "exc"
     },
     "file_current_clamp": {
       "input_type": "file_current_clamp",
-      "module": "h5",
-      "input_file":"$BASE_DIR/input/amps.h5"
+      "module": "FileIClamp",
+      "input_file":"$BASE_DIR/input/amps.h5",
+      "node_set":"all"
     }
   },
   "output": {

@@ -26,8 +26,8 @@ begintemplate WBInhCell
 		/////// geometrical properties //////
 		soma[0] {
 			nseg=1	// create only one segment in the soma
-			L=1.492		// (micrometer)
-			diam=1	// (micrometer)
+			//L=1.492		// (micrometer)
+			//diam=1	// (micrometer)
 	    }
 
 		/////// biophysical properties //////
@@ -86,8 +86,8 @@ begintemplate RTMExcCell
 		/////// geometrical properties //////
 		soma[0] {
 			nseg=1	// create only one segment in the soma
-			L=1.492		// (micrometer)
-			diam=1	// (micrometer)
+			//L=1.492		// (micrometer)
+			//diam=1	// (micrometer)
 	    }
 
 		/////// biophysical properties //////
