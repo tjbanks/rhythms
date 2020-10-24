@@ -1,0 +1,10 @@
+node_type_id model_type model_template pop_name morphology
+100 biophysical hoc:WBInhCell layer2_FSI blank.swc
+101 biophysical hoc:RTMExcCell layer2_CP blank.swc
+102 biophysical hoc:RTMExcCell layer2_CS blank.swc
+103 biophysical hoc:WBInhCell layer5_FSI blank.swc
+104 biophysical hoc:RTMExcCell layer5_CP blank.swc
+105 biophysical hoc:RTMExcCell layer5_CS blank.swc
+106 biophysical hoc:WBInhCell layer6_FSI blank.swc
+107 biophysical hoc:RTMExcCell layer6_CP blank.swc
+108 biophysical hoc:RTMExcCell layer6_CS blank.swc
