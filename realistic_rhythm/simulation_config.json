@@ -19,14 +19,17 @@
   "node_sets": {
     "exc": {
       "pop_name":"bgnoisevirtExc"
-    }
+    },
+	"ext": {
+	  "model_type":"virtual"
+	}
   },
   "inputs": {
     "noise": {
       "input_type": "spikes",
       "module": "sonata",
       "input_file": "input/ext_inp_poisson.h5",
-      "node_set": "exc"
+      "node_set": "ext"
     },
     "file_current_clamp": {
       "input_type": "file_current_clamp",

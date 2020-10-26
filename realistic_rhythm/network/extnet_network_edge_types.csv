@@ -1,2 +1,5 @@
-edge_type_id target_query source_query model_template distance_range delay syn_weight target_sections dynamics_params
-100 pop_name=='layer5_Exc' pop_name=='bgnoisevirtExt' exp2syn "[0.0, 999.9]" 0 0.03 ['soma'] PING_ExcToExc.json
+edge_type_id target_query source_query dynamics_params target_sections syn_weight delay distance_range model_template
+100 pop_name=='layer2_CP' pop_name=='bgnoisevirtL2CP' PING_ExcToExc.json ['soma'] 0.03 0 "[0.0, 999.9]" exp2syn
+101 pop_name=='layer2_CS' pop_name=='bgnoisevirtL2CS' PING_ExcToExc.json ['soma'] 0.03 0 "[0.0, 999.9]" exp2syn
+102 pop_name=='layer6_CP' pop_name=='bgnoisevirtL6CP' PING_ExcToExc.json ['soma'] 0.03 0 "[0.0, 999.9]" exp2syn
+103 pop_name=='layer6_CS' pop_name=='bgnoisevirtL6CS' PING_ExcToExc.json ['soma'] 0.03 0 "[0.0, 999.9]" exp2syn

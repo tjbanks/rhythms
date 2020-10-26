@@ -1,2 +1,5 @@
-node_type_id model_type pop_group pop_name
-100 virtual bgnoisevirtExt bgnoisevirtExt
+node_type_id model_type pop_name
+100 virtual bgnoisevirtL2CP
+101 virtual bgnoisevirtL6CP
+102 virtual bgnoisevirtL2CS
+103 virtual bgnoisevirtL6CS
