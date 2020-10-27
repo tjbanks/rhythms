@@ -1,0 +1,19 @@
+//Loading mechanisms in other folder
+nrn_load_dll("./modfiles/x86_64/.libs/libnrnmech.so")
+nrn_load_dll("./modfiles/nrnmech.dll")
+
+{load_file("nrngui.hoc")}
+{load_file("cell_templates.hoc")}
+{load_file("graphics_library.hoc")}
+
+tstop = 500
+objref CellA // declare neuron object
+CellA = new RTMExcCell() // build neuron from template
+// for stimulating it using current injection
+objref ccl
+CellA.soma ccl = new IClamp(.5)
+ccl.del = 50
+ccl.dur = 300
+ccl.amp = .1
+
+allInOneBoxRTM("CellA", CellA, ccl)

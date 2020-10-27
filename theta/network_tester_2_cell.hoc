@@ -1,0 +1,51 @@
+//Loading mechanisms in other folder
+nrn_load_dll("./modfiles/x86_64/.libs/libnrnmech.so")
+nrn_load_dll("./modfiles/nrnmech.dll")
+
+{load_file("nrngui.hoc")}
+{load_file("cell_templates.hoc")}
+{load_file("graphics_library.hoc")}
+
+// main.hoc
+
+tstop = 200
+v_init = -75
+dt = 0.01
+objref RTMCell, WBCell // declare neuron object
+objref syn[2] //Create a synapse array to store obj references
+objref nc[2] //Create a connection array to store the connection references
+RTMCell = new RTMExcCell() // build neuron from template
+WBCell = new WBInhCell()
+
+// for stimulating it using current injection
+objref ccl
+RTMCell.soma ccl = new IClamp(.5)
+ccl.del = 0
+ccl.dur = 200
+ccl.amp = 2.1 //1.4
+
+// for stimulating it using a synapse
+RTMCell.soma syn[0] = new Exp2Syn(.5) // build a synapse input into RTMCell
+WBCell.soma syn[1] = new Exp2Syn(.5) // build a synapse input into WBCell
+
+//g_ei=0.25; g_ie=0.25;
+//v_rev_e=0; v_rev_i=-75; 
+//tau_r_e=0.5; tau_peak_e=0.5; tau_d_e=3; 
+//tau_r_i=0.5; tau_peak_i=0.5; tau_d_i=9; 
+
+// Inhibitory input to excitatory RTM cell
+syn[0].tau1 = 0.5// rise time
+syn[0].tau2 = 9// decay time
+syn[0].e = -75 // (mV) synaptic channels reversal potential
+//syn[0].g = .25 // (uS) synaptic channels maximum conductance
+
+// Excitatory input to inhibitory WB cell
+syn[1].tau1 = 0.5// rise time
+syn[1].tau2 = 2 // 3// decay time
+syn[1].e = 0 // (mV) synaptic channels reversal potential
+//syn[1].g = .25 // (uS) synaptic channels maximum conductance
+
+RTMCell.soma nc[0] = new NetCon(&v(.5),syn[1],0, 0, .25)
+WBCell.soma nc[1] = new NetCon(&v(.5),syn[0],0, 0, .25)
+
+allInOneBox("RTMCell", RTMCell, ccl, syn[0],"WBCell", WBCell, syn[1], "syn[0]","syn[1]")
