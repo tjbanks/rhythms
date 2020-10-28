@@ -156,7 +156,12 @@ begintemplate OLMhaCell
 			///H Current
 			insert h_olm
 			eh = -32.9
-			gbar_h_olm = 0.006 //.012 // (siemens/cm2)
+			gbar_h_olm = 0.0105 //0.006 //.012 // (siemens/cm2)
+
+			///H Current
+			insert a_olm
+			ea = -90
+			gbar_a_olm = 0.022 // (siemens/cm2)
 
 			/////////////////////////////////////////////////////////////////////////
 		}

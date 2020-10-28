@@ -140,3 +140,4 @@ output/
 
 # h5py (some of these files get large and change often)
 *.h5
+*.tmp

@@ -1,0 +1,20 @@
+//Loading mechanisms in other folder
+nrn_load_dll("./modfiles/x86_64/.libs/libnrnmech.so")
+nrn_load_dll("./modfiles/nrnmech.dll")
+
+{load_file("nrngui.hoc")}
+{load_file("cell_templates.hoc")}
+{load_file("graphics_library.hoc")}
+
+tstop = 500
+v_init = -63
+objref OLM // declare neuron object
+OLM = new OLMhaCell() // build neuron from template
+// for stimulating it using current injection
+objref ccl
+OLM.soma ccl = new IClamp(.5)
+ccl.del = 0
+ccl.dur = 200
+ccl.amp = 0
+
+allInOneBoxOLMha("OLM", OLM, ccl)
