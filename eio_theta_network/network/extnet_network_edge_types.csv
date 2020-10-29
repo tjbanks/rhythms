@@ -1,2 +1,2 @@
-edge_type_id target_query source_query delay distance_range syn_weight dynamics_params model_template target_sections
-100 pop_name=='Exc' pop_name=='bgnoisevirtExt' 0 "[0.0, 999.9]" 0.03 ExcToExc.json exp2syn ['soma']
+edge_type_id target_query source_query syn_weight target_sections delay dynamics_params distance_range model_template
+100 pop_name=='Exc' pop_name=='bgnoisevirtExt' 0.03 ['soma'] 0 ExcToExc.json "[0.0, 999.9]" exp2syn
